@@ -4,6 +4,8 @@ type RecordedBook = {
   authors: string[]
   thumbnail: string
   status: string
+  rating: string
+  review: string
 }
 
 type SearchResult = {
