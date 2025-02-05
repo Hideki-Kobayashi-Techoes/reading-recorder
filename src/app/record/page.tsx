@@ -8,15 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
 
-// 仮の本の詳細を取得する関数（実際にはAPIを使用します）
-const getBookDetails = async (id: string) => {
-  // この関数は実際にはAPIを呼び出します
-  return {
-    id,
-    title: "選択された本",
-    authors: ["著者"],
-    thumbnail: "/placeholder.svg",
-  };
+const getBookDetails = async (id: string): Promise<SearchResult> => {
+  const response = await fetch(`/api/books/${id}`);
+  if (!response.ok) {
+    throw new Error("本の詳細の取得に失敗しました");
+  }
+  return response.json();
 };
 
 export default function RecordPage() {
@@ -27,21 +24,29 @@ export default function RecordPage() {
   const [status, setStatus] = useState("");
   const [rating, setRating] = useState("");
   const [review, setReview] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (bookId) {
-      getBookDetails(bookId).then((book) => setBook(book));
-    }
+    if (!bookId) return;
+
+    getBookDetails(bookId)
+      .then((book) => {
+        setBook(book);
+      })
+      .catch((err) => {
+        setError("本の詳細の取得に失敗しました");
+        console.error(err);
+      });
   }, [bookId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: 記録の送信を実装する
     console.log("記録を送信:", { bookId, status, rating, review });
-    // 記録後、ホームページにリダイレクト
     router.push("/");
   };
 
+  if (error) return <div className="text-red-500">{error}</div>;
   if (!book) return <div>読み込み中...</div>;
 
   return (
