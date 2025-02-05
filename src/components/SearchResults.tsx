@@ -17,7 +17,7 @@ export default function SearchResults({ books }: { books: SearchResult[] }) {
               <Image
                 src={book.thumbnail || placeholder}
                 alt={book.title}
-                className="w-full h-48 object-cover mb-2"
+                className="w-full h-48 object-contain mb-2"
                 width={128}
                 height={192}
               />

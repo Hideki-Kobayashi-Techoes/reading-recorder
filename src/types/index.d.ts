@@ -13,4 +13,21 @@ type SearchResult = {
   title: string
   authors: string[]
   thumbnail: string
+  description: string
+  publishedDate?: string
+  publisher: string
 }
+
+type GoogleBookItem = {
+  id: string;
+  volumeInfo: {
+    title: string;
+    authors?: string[];
+    imageLinks?: {
+      thumbnail?: string;
+    };
+    description?: string;
+    publishedDate?: string;
+    publisher?: string;
+  };
+};
