@@ -13,8 +13,8 @@ type SearchResult = {
   title: string;
   authors: string[];
   thumbnail: string;
-  description: string;
-  publishedDate?: string;
+  price: string;
+  publishedDate: string;
   publisher: string;
 };
 
@@ -26,8 +26,12 @@ type GoogleBookItem = {
     imageLinks?: {
       thumbnail?: string;
     };
-    description?: string;
     publishedDate?: string;
     publisher?: string;
+  };
+  saleInfo: {
+    listPrice: {
+      amount?: string;
+    };
   };
 };

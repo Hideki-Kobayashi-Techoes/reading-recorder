@@ -21,7 +21,10 @@ export default function SearchResults({ books }: { books: SearchResult[] }) {
                 width={128}
                 height={192}
               />
-              <p className="text-sm text-gray-600">{book.authors.join(", ")}</p>
+              <p className="text-sm text-gray-600">著者: {book.authors.join(", ")}</p>
+              <p className="text-sm text-gray-600">価格: {book.price === "-" ? book.price : `${book.price}円`}</p>
+              <p className="text-sm text-gray-600">出版社: {book.publisher}</p>
+              <p className="text-sm text-gray-600">発行日: {book.publishedDate}</p>
             </CardContent>
           </Card>
         </Link>

@@ -23,11 +23,11 @@ export async function GET(request: Request): Promise<NextResponse> {
     const formattedData = data.items.map((item: GoogleBookItem): SearchResult => ({
       id: item.id,
       title: item.volumeInfo.title,
-      authors: item.volumeInfo.authors || ["著者不明"],
+      authors: item.volumeInfo.authors || ["-"],
       thumbnail: item.volumeInfo.imageLinks?.thumbnail || "/placeholder.svg",
-      description: item.volumeInfo.description || "説明なし",
-      publishedDate: item.volumeInfo.publishedDate,
-      publisher: item.volumeInfo.publisher || "出版社不明",
+      price: item.saleInfo.listPrice?.amount || "-",
+      publishedDate: item.volumeInfo.publishedDate || "-",
+      publisher: item.volumeInfo.publisher || "-",
     }));
 
     return NextResponse.json({ items: formattedData });
