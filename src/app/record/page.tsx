@@ -54,14 +54,23 @@ export default function RecordPage() {
       <h1 className="text-3xl font-bold mb-8">読書記録</h1>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-2">{book.title}</h2>
-        <p className="text-gray-600 mb-2">{book.authors.join(", ")}</p>
-        <Image
-          src={book.thumbnail || "/placeholder.svg"}
-          alt={book.title}
-          className="w-32 h-48 object-cover"
-          width={128}
-          height={192}
-        />
+        <div className="flex gap-6">
+          <Image
+            src={book.thumbnail || "/placeholder.svg"}
+            alt={book.title}
+            className="w-32 h-48 object-cover"
+            width={128}
+            height={192}
+          />
+          <div className="space-y-2">
+            <p className="text-gray-600">{book.authors?.join(", ") || "-"}</p>
+            <p className="text-gray-600">
+              {book.price === "-" ? book.price : `${book.price}円`}
+            </p>
+            <p className="text-gray-600">{book.publisher}</p>
+            <p className="text-gray-600">{book.publishedDate}</p>
+          </div>
+        </div>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

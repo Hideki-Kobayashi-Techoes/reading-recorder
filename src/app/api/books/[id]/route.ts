@@ -17,11 +17,11 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const formattedData: SearchResult = {
       id: data.id,
       title: data.volumeInfo.title,
-      authors: data.volumeInfo.authors || ["著者不明"],
+      authors: data.volumeInfo.authors || ["-"],
       thumbnail: data.volumeInfo.imageLinks?.thumbnail || "/placeholder.svg",
-      description: data.volumeInfo.description || "説明なし",
-      publishedDate: data.volumeInfo.publishedDate,
-      publisher: data.volumeInfo.publisher || "出版社不明",
+      price: data.saleInfo.listPrice?.amount || "-",
+      publishedDate: data.volumeInfo.publishedDate || "-",
+      publisher: data.volumeInfo.publisher || "-",
     };
 
     return NextResponse.json(formattedData);
