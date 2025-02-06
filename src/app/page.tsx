@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Image from "next/image"
-
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import { useSearchStore } from "@/store/searchStore";
 // 仮の記録された本を取得する関数（実際にはAPIを使用します）
 const getRecordedBooks = async () => {
   // この関数は実際にはAPIを呼び出します
@@ -16,11 +16,19 @@ const getRecordedBooks = async () => {
 }
 
 export default function HomePage() {
-  const [recordedBooks, setRecordedBooks] = useState<RecordedBook[]>([])
+  const { setSearchVisible, focusSearchInput } = useSearchStore();
 
   useEffect(() => {
-    getRecordedBooks().then(setRecordedBooks)
-  }, [])
+    getRecordedBooks().then(setRecordedBooks);
+  }, []);
+
+  const handleSearchClick = () => {
+    if (window.innerWidth >= 768) {
+      focusSearchInput();
+    } else {
+      setSearchVisible(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white pt-16">
@@ -42,9 +50,7 @@ export default function HomePage() {
               </section>
               <section className="text-center">
                 <h2 className="text-2xl font-semibold mb-4">始めましょう</h2>
-                <Link href="/search">
-                  <Button size="lg">本を検索する</Button>
-                </Link>
+                <Button size="lg" onClick={handleSearchClick}>本を検索する</Button>
               </section>
             </div>
           </>
@@ -77,6 +83,6 @@ export default function HomePage() {
         )}
       </main>
     </div>
-  )
+  );
 }
 

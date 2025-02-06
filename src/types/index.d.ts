@@ -1,22 +1,22 @@
 type RecordedBook = {
-  id: string
-  title: string
-  authors: string[]
-  thumbnail: string
-  status: string
-  rating: string
-  review: string
-}
+  id: string;
+  title: string;
+  authors: string[];
+  thumbnail: string;
+  status: string;
+  rating: string;
+  review: string;
+};
 
 type SearchResult = {
-  id: string
-  title: string
-  authors: string[]
-  thumbnail: string
-  description: string
-  publishedDate?: string
-  publisher: string
-}
+  id: string;
+  title: string;
+  authors: string[];
+  thumbnail: string;
+  description: string;
+  publishedDate?: string;
+  publisher: string;
+};
 
 type GoogleBookItem = {
   id: string;

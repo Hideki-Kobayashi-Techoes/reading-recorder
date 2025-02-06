@@ -6,11 +6,12 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, ArrowLeft } from "lucide-react";
+import { useSearchStore } from "@/store/searchStore";
 
 export default function Header() {
   const [query, setQuery] = useState("");
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
-  const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
+  const { isSearchVisible, setSearchVisible, setSearchInputRef } = useSearchStore();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -23,15 +24,19 @@ export default function Header() {
 
     // 検索ページの場合は検索フォームを表示
     if (pathname === "/search") {
-      setIsSearchVisible(true);
+      setSearchVisible(true);
     } else {
-      setIsSearchVisible(false);
+      setSearchVisible(false);
     }
 
     checkScreenWidth();
     window.addEventListener("resize", checkScreenWidth);
     return () => window.removeEventListener("resize", checkScreenWidth);
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams, setSearchVisible]);
+
+  useEffect(() => {
+    setSearchInputRef(searchInputRef);
+  }, [setSearchInputRef]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +53,7 @@ export default function Header() {
             <div className="flex items-center flex-1 gap-2">
               <Button
                 variant="ghost"
-                onClick={() => setIsSearchVisible(false)}
+                onClick={() => setSearchVisible(false)}
                 className="p-4"
               >
                 <ArrowLeft className="h-6 w-6" />
@@ -76,8 +81,9 @@ export default function Header() {
               {!isWideScreen && (
                 <Button
                   variant="ghost"
-                  onClick={() => setIsSearchVisible(true)}
+                  onClick={() => setSearchVisible(true)}
                   className="p-4"
+                  aria-label="検索"
                 >
                   <Search className="h-6 w-6" />
                   <span className="sr-only">検索</span>
