@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Search, ArrowLeft } from "lucide-react";
 import { useSearchStore } from "@/store/searchStore";
 
-export default function Header() {
+const HeaderContent = () => {
   const [query, setQuery] = useState("");
   const [isWideScreen, setIsWideScreen] = useState<boolean>(false);
   const { isSearchVisible, setSearchVisible, setSearchInputRef } = useSearchStore();
@@ -109,5 +109,13 @@ export default function Header() {
         </div>
       </div>
     </header>
+  );
+}
+
+export default function Header() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HeaderContent />
+    </Suspense>
   );
 }

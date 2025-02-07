@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import SearchResults from "@/components/SearchResults";
-
+import { Suspense } from "react";
 // Google Books APIを使用して本を検索する
 const searchBooks = async (query: string) => {
   try {
@@ -18,15 +18,12 @@ const searchBooks = async (query: string) => {
   }
 };
 
-export default function SearchPage() {
+const SearchPageContent = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  // クエリパラメータを取得
   const searchParams = useSearchParams();
-  // q=の値を取得、なかったら空文字を設定
   const initialQuery = searchParams.get("q") || "";
 
   useEffect(() => {
-    // 初期クエリがあれば検索を実行
     if (initialQuery) {
       handleSearch(initialQuery);
     }
@@ -42,5 +39,13 @@ export default function SearchPage() {
       <h1 className="text-3xl font-bold mb-8">本を検索</h1>
       <SearchResults books={searchResults} />
     </div>
+  );
+};
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

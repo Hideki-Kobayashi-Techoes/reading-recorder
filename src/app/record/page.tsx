@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ const getBookDetails = async (id: string): Promise<SearchResult> => {
   return response.json();
 };
 
-export default function RecordPage() {
+const RecordPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const bookId = searchParams.get("id");
@@ -162,5 +162,13 @@ export default function RecordPage() {
         <Button type="submit">記録を保存</Button>
       </form>
     </div>
+  );
+}
+
+export default function RecordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RecordPageContent />
+    </Suspense>
   );
 }

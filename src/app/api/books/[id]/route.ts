@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse> {
-  const id = params.id;
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }): Promise<NextResponse> {
+  const id = (await params).id;
 
   try {
     const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
