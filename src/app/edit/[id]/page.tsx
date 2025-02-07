@@ -38,7 +38,6 @@ export default function EditPage() {
     );
 
     if (recordIndex !== -1) {
-      // 既存のレコードを更新
       records[recordIndex] = {
         ...records[recordIndex],
         status,
@@ -48,6 +47,17 @@ export default function EditPage() {
       };
 
       localStorage.setItem("bookRecords", JSON.stringify(records));
+      router.push("/");
+    }
+  };
+
+  const handleDelete = () => {
+    if (confirm("本当に削除してもよろしいですか？")) {
+      const records = JSON.parse(localStorage.getItem("bookRecords") || "[]");
+      const filteredRecords = records.filter(
+        (record: RecordedBook) => record.id !== id
+      );
+      localStorage.setItem("bookRecords", JSON.stringify(filteredRecords));
       router.push("/");
     }
   };
@@ -131,7 +141,10 @@ export default function EditPage() {
             rows={4}
           />
         </div>
-        <Button type="submit">更新</Button>
+        <div className="flex justify-between">
+          <Button type="submit">更新</Button>
+          <Button type="button" variant="destructive" onClick={handleDelete}>削除</Button>
+        </div>
       </form>
     </div>
   );
