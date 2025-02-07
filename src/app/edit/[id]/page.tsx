@@ -7,18 +7,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
 
-// 仮の本の詳細を取得する関数（実際にはAPIを使用します）
 const getBookDetails = async (id: string) => {
-  // この関数は実際にはAPIを呼び出します
-  return {
-    id,
-    title: "記録された本",
-    authors: ["著者"],
-    thumbnail: "/placeholder.svg",
-    status: "読了",
-    rating: "4",
-    review: "とても面白かった本です。",
-  };
+  const records = JSON.parse(localStorage.getItem("bookRecords") || "[]");
+  const record = records.find((record: RecordedBook) => record.id === id);
+  return record;
 };
 
 export default function EditPage() {
@@ -40,14 +32,24 @@ export default function EditPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 記録の更新を実装する
-    console.log("記録を更新:", {
-      id,
-      status,
-      rating,
-      review,
-    });
-    router.push("/");
+    const records = JSON.parse(localStorage.getItem("bookRecords") || "[]");
+    const recordIndex = records.findIndex(
+      (record: RecordedBook) => record.id === id
+    );
+
+    if (recordIndex !== -1) {
+      // 既存のレコードを更新
+      records[recordIndex] = {
+        ...records[recordIndex],
+        status,
+        rating,
+        review,
+        createdAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem("bookRecords", JSON.stringify(records));
+      router.push("/");
+    }
   };
 
   if (!book) return <div>読み込み中...</div>;
@@ -57,14 +59,23 @@ export default function EditPage() {
       <h1 className="text-3xl font-bold mb-8">読書記録の編集</h1>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-2">{book.title}</h2>
-        <p className="text-gray-600 mb-2">{book.authors.join(", ")}</p>
-        <Image
-          src={book.thumbnail || "/placeholder.svg"}
-          alt={book.title}
-          className="w-32 h-48 object-cover"
-          width={128}
-          height={192}
-        />
+        <div className="flex gap-6">
+          <Image
+            src={book.thumbnail || "/placeholder.svg"}
+            alt={book.title}
+            className="w-32 h-48 object-cover"
+            width={128}
+            height={192}
+          />
+          <div className="space-y-2">
+            <p className="text-gray-600">{book.authors?.join(", ") || "-"}</p>
+            <p className="text-gray-600">
+              {book.price === "-" ? book.price : `${book.price}円`}
+            </p>
+            <p className="text-gray-600">{book.publisher}</p>
+            <p className="text-gray-600">{book.publishedDate}</p>
+          </div>
+        </div>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -79,9 +90,9 @@ export default function EditPage() {
               <SelectValue placeholder="状況を選択" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="reading">読書中</SelectItem>
-              <SelectItem value="completed">読了</SelectItem>
-              <SelectItem value="plan">読みたい</SelectItem>
+              <SelectItem value="読書中">読書中</SelectItem>
+              <SelectItem value="読了">読了</SelectItem>
+              <SelectItem value="読みたい">読みたい</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -90,7 +101,7 @@ export default function EditPage() {
             htmlFor="rating"
             className="block text-sm font-medium text-gray-700"
           >
-            評価
+            評価 (5段階評価)
           </label>
           <Select value={rating} onValueChange={setRating}>
             <SelectTrigger id="rating">
@@ -99,7 +110,7 @@ export default function EditPage() {
             <SelectContent>
               {[1, 2, 3, 4, 5].map((value) => (
                 <SelectItem key={value} value={value.toString()}>
-                  {value} 星
+                  {value}
                 </SelectItem>
               ))}
             </SelectContent>

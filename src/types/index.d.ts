@@ -3,6 +3,9 @@ type RecordedBook = {
   title: string;
   authors: string[];
   thumbnail: string;
+  price: string;
+  publisher: string;
+  publishedDate: string;
   status: string;
   rating: string;
   review: string;

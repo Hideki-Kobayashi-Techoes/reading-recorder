@@ -57,6 +57,9 @@ export default function RecordPage() {
         title: book?.title,
         authors: book?.authors,
         thumbnail: book?.thumbnail,
+        price: book?.price,
+        publisher: book?.publisher,
+        publishedDate: book?.publishedDate,
         status,
         rating,
         review,
@@ -80,7 +83,7 @@ export default function RecordPage() {
   if (!book) return <div>読み込み中...</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 pt-24">
       <h1 className="text-3xl font-bold mb-8">読書記録</h1>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-2">{book.title}</h2>
