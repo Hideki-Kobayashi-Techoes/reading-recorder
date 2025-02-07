@@ -84,7 +84,7 @@ export default function RecordPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 pt-24">
-      <h1 className="text-3xl font-bold mb-8">読書記録</h1>
+      <h1 className="text-3xl font-bold mb-8">読書記録に保存</h1>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-2">{book.title}</h2>
         <div className="flex gap-6">
