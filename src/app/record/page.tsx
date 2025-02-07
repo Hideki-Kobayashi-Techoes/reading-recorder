@@ -41,9 +41,39 @@ export default function RecordPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 記録の送信を実装する
-    console.log("記録を送信:", { bookId, status, rating, review });
-    router.push("/");
+
+    try {
+      if (!book) {
+        throw new Error("本の詳細が取得できません");
+      }
+
+      // localStorageから既存の記録を取得
+      const existingRecords = localStorage.getItem("bookRecords");
+      const records = existingRecords ? JSON.parse(existingRecords) : [];
+
+      // 記録データを作成
+      const record: RecordedBook = {
+        id: self.crypto.randomUUID(),
+        title: book?.title,
+        authors: book?.authors,
+        thumbnail: book?.thumbnail,
+        status,
+        rating,
+        review,
+        createdAt: new Date().toISOString(),
+      };
+
+      // 記録データを追加
+      records.push(record);
+
+      // localStorageに保存
+      localStorage.setItem("bookRecords", JSON.stringify(records));
+
+      router.push("/");
+    } catch (error) {
+      console.error("エラー:", error);
+      setError("記録の送信に失敗しました");
+    }
   };
 
   if (error) return <div className="text-red-500">{error}</div>;
@@ -85,9 +115,9 @@ export default function RecordPage() {
               <SelectValue placeholder="状況を選択" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="reading">読書中</SelectItem>
-              <SelectItem value="completed">読了</SelectItem>
-              <SelectItem value="plan">読みたい</SelectItem>
+              <SelectItem value="読書中">読書中</SelectItem>
+              <SelectItem value="読了">読了</SelectItem>
+              <SelectItem value="読みたい">読みたい</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -96,7 +126,7 @@ export default function RecordPage() {
             htmlFor="rating"
             className="block text-sm font-medium text-gray-700"
           >
-            評価
+            評価 (5段階評価)
           </label>
           <Select onValueChange={setRating}>
             <SelectTrigger id="rating">
@@ -105,7 +135,7 @@ export default function RecordPage() {
             <SelectContent>
               {[1, 2, 3, 4, 5].map((value) => (
                 <SelectItem key={value} value={value.toString()}>
-                  {value} 星
+                  {value}
                 </SelectItem>
               ))}
             </SelectContent>

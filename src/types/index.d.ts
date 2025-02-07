@@ -6,6 +6,7 @@ type RecordedBook = {
   status: string;
   rating: string;
   review: string;
+  createdAt: string;
 };
 
 type SearchResult = {

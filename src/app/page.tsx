@@ -1,21 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
 import { useSearchStore } from "@/store/searchStore";
-// 仮の記録された本を取得する関数（実際にはAPIを使用します）
-const getRecordedBooks = async () => {
-  // この関数は実際にはAPIを呼び出します
-  return [
-    { id: "1", title: "記録された本1", authors: ["著者1"], thumbnail: "/placeholder.svg", status: "読了" },
-    { id: "2", title: "記録された本2", authors: ["著者2"], thumbnail: "/placeholder.svg", status: "読書中" },
-  ]
-}
+import RecordBooks from "@/components/RecordBooks";
+
+const getRecordedBooks = async (): Promise<RecordedBook[]> => {
+  const existingRecords: string | null = localStorage.getItem("bookRecords");
+  const records: RecordedBook[] = existingRecords ? JSON.parse(existingRecords) : [];
+  return records;
+};
 
 export default function HomePage() {
+  const [recordedBooks, setRecordedBooks] = useState<RecordedBook[]>([]);
   const { setSearchVisible, focusSearchInput } = useSearchStore();
 
   useEffect(() => {
@@ -57,32 +54,10 @@ export default function HomePage() {
         ) : (
           <>
             <h1 className="text-4xl font-bold text-center mb-8">あなたの読書記録</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recordedBooks.map((book) => (
-                <Link href={`/edit/${book.id}`} key={book.id}>
-                  <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <CardTitle className="line-clamp-2">{book.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Image
-                        src={book.thumbnail || "/placeholder.svg"}
-                        alt={book.title}
-                        className="w-full h-48 object-cover mb-2"
-                        width={128}
-                        height={192}
-                      />
-                      <p className="text-sm text-gray-600">{book.authors.join(", ")}</p>
-                      <p className="text-sm font-semibold mt-2">状態: {book.status}</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
+            <RecordBooks books={recordedBooks} />
           </>
         )}
       </main>
     </div>
   );
 }
-
